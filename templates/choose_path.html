@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Choose Your Path | Mentorship Finder{% endblock %}
+
+{% block content %}
+<main class="page-section">
+  <div class="section-heading">
+    <p class="eyebrow">Choose Your Path</p>
+    <h1>What would you like to do today?</h1>
+    <p>Find a senior mentor for guidance, or register yourself as a mentor to help others.</p>
+  </div>
+
+  <section class="choice-grid">
+    <a class="choice-card" href="{{ url_for('main.find_mentor') }}">
+      <i class="bi bi-search-heart"></i>
+      <h2>Find a Mentor</h2>
+      <p>Explore mentors across all branches and search by expertise.</p>
+    </a>
+
+    <a class="choice-card" href="{{ url_for('mentors.become_mentor') }}">
+      <i class="bi bi-person-plus"></i>
+      <h2>Become a Mentor</h2>
+      <p>Create your mentor profile and make your expertise visible to students.</p>
+    </a>
+  </section>
+</main>
+{% endblock %}

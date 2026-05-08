@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Categories | Mentorship Finder{% endblock %}
+
+{% block content %}
+<main class="page-section">
+  <div class="section-heading">
+    <p class="eyebrow">Welcome {{ mentee_name }}</p>
+    <h1>Select mentorship category</h1>
+    <p>Choose the area where you need guidance. Mentors from all branches are visible.</p>
+  </div>
+
+  <section class="category-grid">
+    {% for category in categories %}
+      <a class="category-card" href="{{ url_for('main.mentor_listing', category=category) }}">
+        <i class="bi {{ category_details[category].icon }}"></i>
+        <h2>{{ category }}</h2>
+        <p>{{ category_details[category].description }}</p>
+      </a>
+    {% endfor %}
+  </section>
+</main>
+{% endblock %}

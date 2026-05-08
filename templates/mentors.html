@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category }} Mentors | Mentorship Finder{% endblock %}
+
+{% block content %}
+<main class="page-section">
+  <div class="section-heading split-heading">
+    <div>
+      <p class="eyebrow">Hi {{ mentee_name }}</p>
+      <h1>{{ category }} Mentors</h1>
+      <p>Browse all registered mentors in this category. Use live search to filter by expertise.</p>
+    </div>
+    <a class="ghost-btn" href="{{ url_for('main.categories') }}">Back to Categories</a>
+  </div>
+
+  <div class="search-panel">
+    <i class="bi bi-search"></i>
+    <input id="mentor-search" type="search" placeholder="Search expertise, e.g. Python, AI, cricket">
+  </div>
+
+  <div id="mentor-data" data-category="{{ category }}"></div>
+
+  <section id="mentor-list" class="mentor-grid">
+    <div class="loading-card">Loading mentors...</div>
+  </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/mentors.js') }}"></script>
+{% endblock %}

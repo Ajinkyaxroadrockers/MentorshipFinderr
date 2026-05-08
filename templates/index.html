@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Mentorship Finder{% endblock %}
+
+{% block content %}
+<header class="hero">
+  <div class="hero-content">
+    <p class="eyebrow">Student Mentorship Portal</p>
+    <h1>Find the right senior mentor for your college journey</h1>
+    <p>
+      Connect with seniors for studies, projects, sports, cultural activities,
+      and placements. Mentors register themselves, and students can discover them
+      instantly by category and expertise.
+    </p>
+
+    {% if current_user %}
+      <a class="primary-btn" href="{{ url_for('main.choose_path') }}">Continue</a>
+    {% else %}
+      <a class="primary-btn" href="{{ url_for('auth.login') }}">Sign in to Get Started</a>
+    {% endif %}
+  </div>
+
+  <div class="hero-card">
+    <h2>Built for college collaboration</h2>
+    <ul>
+      <li>Google login for secure access</li>
+      <li>Persistent mentor profiles</li>
+      <li>Live expertise search</li>
+    </ul>
+  </div>
+</header>
+{% endblock %}

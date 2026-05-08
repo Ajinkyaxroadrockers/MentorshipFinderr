@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Find a Mentor | Mentorship Finder{% endblock %}
+
+{% block content %}
+<main class="page-section narrow-page">
+  <div class="section-heading">
+    <p class="eyebrow">Find a Mentor</p>
+    <h1>Enter your name</h1>
+    <p>No branch restriction. You can view mentors from every department.</p>
+  </div>
+
+  <form class="form-card" method="POST">
+    {% if error %}
+      <p class="error-message">{{ error }}</p>
+    {% endif %}
+
+    <label for="mentee_name">Your Name</label>
+    <input id="mentee_name" name="mentee_name" type="text" placeholder="Enter your full name" required>
+
+    <button class="primary-btn full-btn" type="submit">Continue to Categories</button>
+  </form>
+</main>
+{% endblock %}

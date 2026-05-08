@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile | Mentorship Finder{% endblock %}
+
+{% block content %}
+<main class="page-section narrow-page">
+  <div class="section-heading">
+    <p class="eyebrow">My Mentor Profile</p>
+    <h1>Manage your profile</h1>
+    <p>Only you can edit or delete your mentor profile.</p>
+  </div>
+
+  {% if mentor %}
+    <article class="mentor-card profile-card">
+      <img src="{{ mentor.photo_path }}" alt="{{ mentor.mentor_name }}">
+
+      <div class="mentor-info">
+        <span class="pill">{{ mentor.category }}</span>
+        <h2>{{ mentor.mentor_name }}</h2>
+        <p><strong>Branch:</strong> {{ mentor.branch }}</p>
+        <p><strong>Year:</strong> {{ mentor.year }}</p>
+        <p><strong>Expertise:</strong> {{ mentor.expertise }}</p>
+        <p><strong>Email:</strong> {{ mentor.email }}</p>
+
+        {% if mentor.linkedin %}
+          <p><strong>LinkedIn:</strong> <a href="{{ mentor.linkedin }}" target="_blank">{{ mentor.linkedin }}</a></p>
+        {% endif %}
+      </div>
+    </article>
+
+    <div class="profile-actions">
+      <a class="primary-btn" href="{{ url_for('mentors.edit_profile') }}">Edit Profile</a>
+
+      <form action="{{ url_for('mentors.delete_profile') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete your mentor profile?');">
+        <button class="danger-btn" type="submit">Delete Profile</button>
+      </form>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-person-badge"></i>
+      <h2>No mentor profile yet</h2>
+      <p>Create your profile so students can discover your expertise.</p>
+      <a class="primary-btn" href="{{ url_for('mentors.become_mentor') }}">Become a Mentor</a>
+    </div>
+  {% endif %}
+</main>
+{% endblock %}
