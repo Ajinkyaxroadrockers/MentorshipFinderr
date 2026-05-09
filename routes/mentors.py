@@ -117,22 +117,21 @@ def api_mentors():
 
     query = Mentor.query
 
-    if category in CATEGORIES:
-        query = query.filter_by(category=category)
+    category = request.args.get("category", "")
 
     if search:
         pattern = f"%{search}%"
+
         query = query.filter(
-            or_(
-                Mentor.mentor_name.ilike(pattern),
-                Mentor.expertise.ilike(pattern),
-                Mentor.category.ilike(pattern),
-                Mentor.branch.ilike(pattern),
-                Mentor.year.ilike(pattern),
-                Mentor.email.ilike(pattern),
-                Mentor.linkedin.ilike(pattern),
-            )
+        or_(
+            Mentor.mentor_name.ilike(pattern),
+            Mentor.expertise.ilike(pattern),
+            Mentor.branch.ilike(pattern),
+            Mentor.year.ilike(pattern),
+            Mentor.email.ilike(pattern),
+            Mentor.linkedin.ilike(pattern),
         )
+    )
 
     mentors = query.order_by(Mentor.created_at.desc()).all()
     return jsonify([mentor.to_dict() for mentor in mentors])
@@ -159,7 +158,6 @@ def update_mentor_from_form(mentor):
     branch = request.form.get("branch", "").strip()
     year = request.form.get("year", "").strip()
     expertise = request.form.get("expertise", "").strip()
-    category = request.form.get("category", "").strip()
     email = request.form.get("email", "").strip()
     linkedin = request.form.get("linkedin", "").strip()
 
@@ -175,11 +173,11 @@ def update_mentor_from_form(mentor):
     if year not in YEARS:
         return "Please select a valid year."
 
-    if category not in CATEGORIES:
-        return "Please select a valid category."
-
     try:
-        photo_path = save_uploaded_photo(request.files.get("photo"), mentor.photo_path)
+        photo_path = save_uploaded_photo(
+            request.files.get("photo"),
+            mentor.photo_path
+        )
     except ValueError as error:
         return str(error)
 
@@ -187,7 +185,10 @@ def update_mentor_from_form(mentor):
     mentor.branch = branch
     mentor.year = year
     mentor.expertise = expertise
-    mentor.category = category
+
+    # Keep database safe without removing column
+    mentor.category = "General"
+
     mentor.email = email
     mentor.linkedin = linkedin
     mentor.photo_path = photo_path

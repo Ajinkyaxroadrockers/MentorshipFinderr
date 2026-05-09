@@ -7,7 +7,7 @@
   <div class="section-heading">
     <p class="eyebrow">Mentor Profile</p>
     <h1>{% if mentor %}Edit your mentor profile{% else %}Become a mentor{% endif %}</h1>
-    <p>Students will discover your profile based on category and expertise.</p>
+    <p>Students will discover your profile based on your expertise.</p>
   </div>
 
   <form class="form-card" method="POST" enctype="multipart/form-data">
@@ -35,21 +35,26 @@
     </select>
 
     <label for="expertise">Expertise</label>
-    <input id="expertise" name="expertise" type="text" value="{{ mentor.expertise if mentor else '' }}" placeholder="Example: Python + AI, cricket, resume building" required>
-
-    <label for="category">Category of Expertise</label>
-    <select id="category" name="category" required>
-      <option value="">Select category</option>
-      {% for category in categories %}
-        <option value="{{ category }}" {% if mentor and mentor.category == category %}selected{% endif %}>{{ category }}</option>
-      {% endfor %}
-    </select>
+    <input
+      id="expertise"
+      name="expertise"
+      type="text"
+      value="{{ mentor.expertise if mentor else '' }}"
+      placeholder="Example: Python + AI, cricket, resume building"
+      required
+    >
 
     <label for="email">Email</label>
     <input id="email" name="email" type="email" value="{{ mentor.email if mentor else current_user.email }}" required>
 
     <label for="linkedin">LinkedIn Profile or Username <span>Optional</span></label>
-    <input id="linkedin" name="linkedin" type="text" value="{{ mentor.linkedin if mentor else '' }}" placeholder="https://linkedin.com/in/username">
+    <input
+      id="linkedin"
+      name="linkedin"
+      type="text"
+      value="{{ mentor.linkedin if mentor else '' }}"
+      placeholder="https://linkedin.com/in/username"
+    >
 
     <label for="photo">Photo {% if mentor %}<span>Upload only if you want to change it</span>{% endif %}</label>
     <input id="photo" name="photo" type="file" accept="image/png,image/jpeg,image/jpg,image/webp">
