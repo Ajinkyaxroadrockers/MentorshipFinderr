@@ -1,4 +1,5 @@
 from flask import Blueprint, abort, flash, jsonify, redirect, render_template, request, url_for
+from sqlalchemy import or_
 
 from config import BRANCHES, CATEGORIES, YEARS
 from models import Mentor, db
@@ -15,7 +16,7 @@ def become_mentor():
 
     if request.method == "POST":
         if existing_profile:
-            flash("You already have a mentor profile. Edit it from My Profile.", "warning")
+            flash("You already have a mentor profile. You can edit it from My Profile.", "warning")
             return redirect(url_for("mentors.my_profile"))
 
         mentor = build_mentor_from_form(user)
@@ -105,7 +106,7 @@ def delete_profile():
     db.session.commit()
 
     flash("Your mentor profile has been deleted.", "info")
-    return redirect(url_for("main.choose_path"))
+    return redirect(url_for("main.find_mentor"))
 
 
 @mentors_bp.route("/api/mentors")
@@ -120,7 +121,18 @@ def api_mentors():
         query = query.filter_by(category=category)
 
     if search:
-        query = query.filter(Mentor.expertise.ilike(f"%{search}%"))
+        pattern = f"%{search}%"
+        query = query.filter(
+            or_(
+                Mentor.mentor_name.ilike(pattern),
+                Mentor.expertise.ilike(pattern),
+                Mentor.category.ilike(pattern),
+                Mentor.branch.ilike(pattern),
+                Mentor.year.ilike(pattern),
+                Mentor.email.ilike(pattern),
+                Mentor.linkedin.ilike(pattern),
+            )
+        )
 
     mentors = query.order_by(Mentor.created_at.desc()).all()
     return jsonify([mentor.to_dict() for mentor in mentors])

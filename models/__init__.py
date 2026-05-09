@@ -41,6 +41,7 @@ class Mentor(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
+            "name": self.mentor_name,
             "mentor_name": self.mentor_name,
             "branch": self.branch,
             "year": self.year,
@@ -48,5 +49,9 @@ class Mentor(db.Model):
             "category": self.category,
             "email": self.email,
             "photo_path": self.photo_path,
+            "image": self.photo_path,
             "linkedin": self.linkedin or "",
+            "skills": [self.expertise],
+            "tags": [self.category, self.branch, self.year],
         }
+    

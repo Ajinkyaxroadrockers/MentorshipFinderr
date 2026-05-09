@@ -53,7 +53,7 @@ def callback():
     session["user_id"] = user.id
 
     flash(f"Welcome, {user.name}!", "success")
-    return redirect(url_for("main.choose_path"))
+    return redirect(url_for("main.find_mentor"))
 
 
 @auth_bp.route("/logout")

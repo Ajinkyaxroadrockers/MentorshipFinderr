@@ -1,24 +1,29 @@
 {% extends "base.html" %}
 
-{% block title %}{{ category }} Mentors | Mentorship Finder{% endblock %}
+{% block title %}All Mentors | Mentorship Finder{% endblock %}
 
 {% block content %}
 <main class="page-section">
   <div class="section-heading split-heading">
     <div>
       <p class="eyebrow">Hi {{ mentee_name }}</p>
-      <h1>{{ category }} Mentors</h1>
-      <p>Browse all registered mentors in this category. Use live search to filter by expertise.</p>
+      <h1>All Mentors</h1>
+      <p>Browse every registered mentor and search by skill, expertise, category, branch, or name.</p>
     </div>
-    <a class="ghost-btn" href="{{ url_for('main.categories') }}">Back to Categories</a>
+    <a class="ghost-btn" href="{{ url_for('mentors.become_mentor') }}">Become a Mentor</a>
   </div>
 
   <div class="search-panel">
     <i class="bi bi-search"></i>
-    <input id="mentor-search" type="search" placeholder="Search expertise, e.g. Python, AI, cricket">
+    <input
+      id="mentor-search"
+      class="search-input"
+      type="search"
+      placeholder="Search mentors by skill, expertise, coding, cricket, projects..."
+    >
   </div>
 
-  <div id="mentor-data" data-category="{{ category }}"></div>
+  <div id="mentor-data"></div>
 
   <section id="mentor-list" class="mentor-grid">
     <div class="loading-card">Loading mentors...</div>
