@@ -30,7 +30,7 @@ class Config:
 
 
 BRANCHES = ["MECH", "COMPS", "IT", "EXTC"]
-YEARS = ["SE", "TE", "BE"]
+YEARS = ["FE","SE", "TE", "BE"]
 CATEGORIES = ["Studies", "Projects", "Cultural", "Sports", "Placements"]
 
 CATEGORY_DETAILS = {
