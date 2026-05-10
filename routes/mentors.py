@@ -1,9 +1,10 @@
 from flask import Blueprint, abort, flash, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import or_
+import cloudinary.uploader
 
 from config import BRANCHES, CATEGORIES, YEARS
 from models import Mentor, db
-from routes.utils import current_user, login_required, save_uploaded_photo
+from routes.utils import current_user, login_required
 
 mentors_bp = Blueprint("mentors", __name__)
 
@@ -117,21 +118,22 @@ def api_mentors():
 
     query = Mentor.query
 
-    category = request.args.get("category", "")
+    if category:
+        query = query.filter(Mentor.category == category)
 
     if search:
         pattern = f"%{search}%"
 
         query = query.filter(
-        or_(
-            Mentor.mentor_name.ilike(pattern),
-            Mentor.expertise.ilike(pattern),
-            Mentor.branch.ilike(pattern),
-            Mentor.year.ilike(pattern),
-            Mentor.email.ilike(pattern),
-            Mentor.linkedin.ilike(pattern),
+            or_(
+                Mentor.mentor_name.ilike(pattern),
+                Mentor.expertise.ilike(pattern),
+                Mentor.branch.ilike(pattern),
+                Mentor.year.ilike(pattern),
+                Mentor.email.ilike(pattern),
+                Mentor.linkedin.ilike(pattern),
+            )
         )
-    )
 
     mentors = query.order_by(Mentor.created_at.desc()).all()
     return jsonify([mentor.to_dict() for mentor in mentors])
@@ -151,6 +153,19 @@ def build_mentor_from_form(user):
         return error
 
     return mentor
+
+
+def upload_photo_to_cloudinary(photo):
+    if not photo or not photo.filename:
+        return None
+
+    upload_result = cloudinary.uploader.upload(
+        photo,
+        folder="mentorconnect/profiles",
+        allowed_formats=["jpg", "jpeg", "png", "webp"],
+    )
+
+    return upload_result["secure_url"]
 
 
 def update_mentor_from_form(mentor):
@@ -174,23 +189,21 @@ def update_mentor_from_form(mentor):
         return "Please select a valid year."
 
     try:
-        photo_path = save_uploaded_photo(
-            request.files.get("photo"),
-            mentor.photo_path
-        )
-    except ValueError as error:
-        return str(error)
+        uploaded_photo_url = upload_photo_to_cloudinary(request.files.get("photo"))
+    except Exception:
+        return "Photo upload failed. Please try again."
 
     mentor.mentor_name = mentor_name
     mentor.branch = branch
     mentor.year = year
     mentor.expertise = expertise
 
-    # Keep database safe without removing column
     mentor.category = "General"
 
     mentor.email = email
     mentor.linkedin = linkedin
-    mentor.photo_path = photo_path
+
+    if uploaded_photo_url:
+        mentor.photo_path = uploaded_photo_url
 
     return None

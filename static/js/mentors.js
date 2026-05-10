@@ -1,19 +1,30 @@
 const mentorList = document.getElementById("mentor-list");
 const searchInput = document.getElementById("mentor-search");
 
-const defaultAvatar =
-  "https://ui-avatars.com/api/?name=Mentor&background=0D8ABC&color=fff";
+const defaultAvatar = "/static/uploads/default-avatar.svg";
 
 let allMentors = [];
 
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 async function fetchMentors() {
-  mentorList.innerHTML =
-    '<div class="loading-card">Loading mentors...</div>';
+  mentorList.innerHTML = '<div class="loading-card">Loading mentors...</div>';
 
   try {
     const response = await fetch("/api/mentors");
-    allMentors = await response.json();
 
+    if (!response.ok) {
+      throw new Error("Unable to fetch mentors");
+    }
+
+    allMentors = await response.json();
     renderMentors(allMentors);
   } catch (error) {
     mentorList.innerHTML =
@@ -35,46 +46,48 @@ function renderMentors(mentors) {
 
   mentorList.innerHTML = mentors
     .map((mentor) => {
-      const image =
-        mentor.image ||
-        mentor.photo_path ||
-        `https://ui-avatars.com/api/?name=${encodeURIComponent(
-          mentor.mentor_name || "Mentor"
-        )}&background=0D8ABC&color=fff`;
+      const name = escapeHtml(mentor.mentor_name || "Mentor");
+      const branch = escapeHtml(mentor.branch);
+      const year = escapeHtml(mentor.year);
+      const expertise = escapeHtml(mentor.expertise);
+      const email = escapeHtml(mentor.email);
+      const linkedin = escapeHtml(mentor.linkedin);
+
+      const image = mentor.photo_path || mentor.image || defaultAvatar;
 
       return `
       <article class="mentor-card">
         <img
-          src="${image}"
-          alt="${mentor.mentor_name || "Mentor"}"
-          onerror="this.src='${defaultAvatar}'"
+          src="${escapeHtml(image)}"
+          alt="${name}"
+          onerror="this.onerror=null; this.src='${defaultAvatar}'"
         >
 
         <div class="mentor-info">
-          <h2>${mentor.mentor_name}</h2>
+          <h2>${name}</h2>
 
-          <p><strong>Branch:</strong> ${mentor.branch}</p>
+          <p><strong>Branch:</strong> ${branch}</p>
 
-          <p><strong>Year:</strong> ${mentor.year}</p>
+          <p><strong>Year:</strong> ${year}</p>
 
-          <p><strong>Expertise:</strong> ${mentor.expertise}</p>
+          <p><strong>Expertise:</strong> ${expertise}</p>
 
-          <p><strong>Email:</strong> ${mentor.email}</p>
+          <p><strong>Email:</strong> ${email}</p>
 
           ${
-            mentor.linkedin
+            linkedin
               ? `
             <p>
               <strong>LinkedIn:</strong>
-              <a href="${mentor.linkedin}" target="_blank">
-                ${mentor.linkedin}
+              <a href="${linkedin}" target="_blank" rel="noopener noreferrer">
+                ${linkedin}
               </a>
             </p>
           `
               : ""
           }
 
-          <a class="primary-btn" href="mailto:${mentor.email}">
+          <a class="primary-btn" href="mailto:${email}">
             Contact Mentor
           </a>
         </div>

@@ -14,9 +14,10 @@
     <article class="mentor-card profile-card">
 
       <img
-        src="{{ mentor.photo_path if mentor.photo_path else 'https://ui-avatars.com/api/?name=' ~ mentor.mentor_name ~ '&background=0D8ABC&color=fff' }}"
-        alt="{{ mentor.mentor_name }}"
+      src="{{ mentor.photo_path or url_for('static', filename='uploads/default-avatar.svg') }}"
+      alt="Profile image"
       >
+
 
       <div class="mentor-info">
         <h2>{{ mentor.mentor_name }}</h2>
