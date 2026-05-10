@@ -204,6 +204,9 @@ def update_mentor_from_form(mentor):
     mentor.linkedin = linkedin
 
     if uploaded_photo_url:
-        mentor.photo_path = uploaded_photo_url
+            mentor.photo_path = uploaded_photo_url
+    elif not mentor.photo_path:
+            mentor.photo_path = "/static/uploads/default-avatar.svg"
+
 
     return None
