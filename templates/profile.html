@@ -14,9 +14,10 @@
     <article class="mentor-card profile-card">
 
       <img
-      src="{{ mentor.photo_path or url_for('static', filename='uploads/default-avatar.svg') }}"
-      alt="Profile image"
+        src="{{ mentor.photo_path if mentor and mentor.photo_path else url_for('static', filename='uploads/default-avatar.png') }}"
+        alt="{{ mentor.mentor_name if mentor else 'Profile image' }}"
       >
+
 
 
       <div class="mentor-info">

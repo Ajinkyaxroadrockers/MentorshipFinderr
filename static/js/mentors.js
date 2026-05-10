@@ -1,7 +1,7 @@
 const mentorList = document.getElementById("mentor-list");
 const searchInput = document.getElementById("mentor-search");
 
-const defaultAvatar = "/static/uploads/default-avatar.svg";
+const defaultAvatar = "/static/uploads/default-avatar.png";
 
 let allMentors = [];
 
