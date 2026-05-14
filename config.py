@@ -8,21 +8,19 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-this")
 
     database_url = os.environ.get("DATABASE_URL")
-
     if database_url and database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
 
     SQLALCHEMY_DATABASE_URI = database_url or f"sqlite:///{BASE_DIR / 'mentorconnect.db'}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+    }
+
     GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
     GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
-
-    CLOUDINARY_CLOUD_NAME = os.environ.get("CLOUDINARY_CLOUD_NAME")
-    CLOUDINARY_API_KEY = os.environ.get("CLOUDINARY_API_KEY")
-    CLOUDINARY_API_SECRET = os.environ.get("CLOUDINARY_API_SECRET")
-
-    DEFAULT_AVATAR = "uploads/default-avatar.svg"
 
     UPLOAD_FOLDER = BASE_DIR / "static" / "uploads"
     MAX_CONTENT_LENGTH = 2 * 1024 * 1024
@@ -30,7 +28,7 @@ class Config:
 
 
 BRANCHES = ["MECH", "COMPS", "IT", "EXTC"]
-YEARS = ["FE","SE", "TE", "BE"]
+YEARS = ["SE", "TE", "BE"]
 CATEGORIES = ["Studies", "Projects", "Cultural", "Sports", "Placements"]
 
 CATEGORY_DETAILS = {
